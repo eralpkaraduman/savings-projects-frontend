@@ -17,20 +17,11 @@ import {
   renderNumber
 } from './helpers'
 
-const HeaderTableCell = withStyles(theme => ({
+const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14
-  },
-}))(TableCell);
-
-const BodyTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    whiteSpace: 'nowrap'
   },
   body: {
     fontSize: 14,
@@ -45,51 +36,51 @@ class ProjectsTable extends Component {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <HeaderTableCell>Responsible</HeaderTableCell>
-            <HeaderTableCell>Category</HeaderTableCell>
-            <HeaderTableCell numeric>Project</HeaderTableCell>
-            <HeaderTableCell>Description</HeaderTableCell>
-            <HeaderTableCell>Start Date</HeaderTableCell>
-            <HeaderTableCell numeric>Savings Amount</HeaderTableCell>
-            <HeaderTableCell>Currency</HeaderTableCell>
-            <HeaderTableCell>Complexity</HeaderTableCell>
+            <StyledTableCell>Responsible</StyledTableCell>
+            <StyledTableCell>Category</StyledTableCell>
+            <StyledTableCell numeric>Project</StyledTableCell>
+            <StyledTableCell>Description</StyledTableCell>
+            <StyledTableCell>Start Date</StyledTableCell>
+            <StyledTableCell numeric>Savings Amount</StyledTableCell>
+            <StyledTableCell>Currency</StyledTableCell>
+            <StyledTableCell>Complexity</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {projects.map((project, index) => (
             <TableRow className={classes.tableRow} key={index}>
 
-              <BodyTableCell component='th' scope='row'>
+              <StyledTableCell component='th' scope='row'>
                 {renderText(project.responsible)}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell>
+              <StyledTableCell>
                 {renderText(project.category)}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell numeric>
+              <StyledTableCell numeric>
                 {renderNumber(project.project)}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell>
+              <StyledTableCell>
                 {renderText(project.description)}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell>
+              <StyledTableCell>
                 {renderDate(project['start date'])}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell numeric>
+              <StyledTableCell numeric>
                 {renderCurrency(project['savings amount'])}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell>
+              <StyledTableCell>
                 {renderText(project.currency)}
-              </BodyTableCell>
+              </StyledTableCell>
 
-              <BodyTableCell>
+              <StyledTableCell>
                 {renderText(project.complexity)}
-              </BodyTableCell>
+              </StyledTableCell>
 
             </TableRow>
           ))}

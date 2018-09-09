@@ -32,7 +32,7 @@ export function renderText(value) {
 export function renderCurrency(value) {
   value = parseFloat(value);
   if (isNaN(value)) {
-    return '';
+    return emptyValue;
   }
   return numeral(value).format(currencyFormat);
 }
@@ -42,8 +42,8 @@ export function renderDate(value) {
 }
 
 export function renderNumber(value) {
-  if (isNaN(value)) {
+  if (isNaN(parseInt(value))) {
     return undefined;
   }
-  return Number(value);
+  return numeral(value).format('0');
 }
