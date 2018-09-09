@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import logo from './logo.svg';
 import './App.css';
 
-import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+import styles from './styles';
+import config from './config';
 import ProjectsPage from './components/ProjectsPage'
 
 class App extends Component {
@@ -24,9 +24,11 @@ class App extends Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Grid container className={classes.root} spacing={16}>
+        <Grid container className={classes.root}>
           <Grid item xs={12}>
-            <ProjectsPage/>
+            <ProjectsPage
+              apiRoot={config.apiRoot}
+            />
           </Grid>
         </Grid>
       </div>
