@@ -11,7 +11,10 @@ import Paper from '@material-ui/core/Paper';
 
 import styles from '../styles';
 import {
-  renderCurrency
+  renderText,
+  renderCurrency,
+  renderDate,
+  renderNumber
 } from './helpers'
 
 const HeaderTableCell = withStyles(theme => ({
@@ -20,7 +23,7 @@ const HeaderTableCell = withStyles(theme => ({
     color: theme.palette.common.white,
   },
   body: {
-    fontSize: 14,
+    fontSize: 14
   },
 }))(TableCell);
 
@@ -31,6 +34,7 @@ const BodyTableCell = withStyles(theme => ({
   },
   body: {
     fontSize: 14,
+    whiteSpace: 'nowrap'
   },
 }))(TableCell);
 
@@ -43,48 +47,48 @@ class ProjectsTable extends Component {
           <TableRow>
             <HeaderTableCell>Responsible</HeaderTableCell>
             <HeaderTableCell>Category</HeaderTableCell>
-            <HeaderTableCell>Project</HeaderTableCell>
+            <HeaderTableCell numeric>Project</HeaderTableCell>
             <HeaderTableCell>Description</HeaderTableCell>
             <HeaderTableCell>Start Date</HeaderTableCell>
-            <HeaderTableCell>Savings Amount</HeaderTableCell>
+            <HeaderTableCell numeric>Savings Amount</HeaderTableCell>
             <HeaderTableCell>Currency</HeaderTableCell>
             <HeaderTableCell>Complexity</HeaderTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {projects.map((project, index) => (
-            <TableRow className={classes.row} key={index}>
+            <TableRow className={classes.tableRow} key={index}>
 
               <BodyTableCell component='th' scope='row'>
-                {project.responsible}
+                {renderText(project.responsible)}
               </BodyTableCell>
 
               <BodyTableCell>
-                {project.category}
+                {renderText(project.category)}
               </BodyTableCell>
 
               <BodyTableCell numeric>
-                {project.project}
+                {renderNumber(project.project)}
               </BodyTableCell>
 
               <BodyTableCell>
-                {project.description}
+                {renderText(project.description)}
               </BodyTableCell>
 
               <BodyTableCell>
-                {project['start date']}
+                {renderDate(project['start date'])}
               </BodyTableCell>
 
               <BodyTableCell numeric>
-                {project['savings amount']}
+                {renderCurrency(project['savings amount'])}
               </BodyTableCell>
 
               <BodyTableCell>
-                {renderCurrency(project.currency)}
+                {renderText(project.currency)}
               </BodyTableCell>
 
               <BodyTableCell>
-                {project.complexity}
+                {renderText(project.complexity)}
               </BodyTableCell>
 
             </TableRow>
