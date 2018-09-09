@@ -1,7 +1,6 @@
 import moment from 'moment';
 import numeral from 'numeral';
 
-const unknownValue = 'Unknown';
 const emptyValue = '';
 const truncateMaxChars = 30;
 const dateFormat = 'DD.MM.YYYY';
@@ -42,7 +41,7 @@ export function renderDate(value) {
 }
 
 export function renderNumber(value) {
-  if (isNaN(parseInt(value))) {
+  if (isNaN(parseInt(value, 10))) {
     return undefined;
   }
   return numeral(value).format('0');
