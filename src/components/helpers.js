@@ -46,3 +46,21 @@ export function renderNumber(value) {
   }
   return numeral(value).format('0');
 }
+
+const byNumberValue = (prop, projects, descending) => (a, b) => {
+  a = parseInt(a[prop], 10);
+  b = parseInt(b[prop], 10);
+  if (descending) {
+    return b - a;
+  }
+  else {
+    return a - b;
+  }
+};
+
+export function sortProjectsBy(prop, projects, descending) {
+  if (prop === 'project') {
+    return projects.sort(byNumberValue(prop, projects, descending));
+  }
+  return projects;
+}
