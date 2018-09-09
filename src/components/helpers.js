@@ -1,10 +1,11 @@
 import moment from 'moment';
+import numeral from 'numeral';
 
 const unknownValue = 'Unknown';
 const emptyValue = '';
 const truncateMaxChars = 30;
 const dateFormat = 'DD.MM.YYYY';
-const addDecimalSeperators = /(\d)(?=(\d{3})+(?!\d))/g
+const currencyFormat = '0,0.00';
 
 function isString(value) {
   return typeof value === 'string' || value instanceof String;
@@ -30,9 +31,10 @@ export function renderText(value) {
 
 export function renderCurrency(value) {
   value = parseFloat(value);
-  value = renderNumber(value);
-  value = value.toFixed(2);
-  return value.toString().replace(addDecimalSeperators, '$1,');
+  if (isNaN(value)) {
+    return '';
+  }
+  return numeral(value).format(currencyFormat);
 }
 
 export function renderDate(value) {
