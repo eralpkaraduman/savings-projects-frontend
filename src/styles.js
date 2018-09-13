@@ -37,6 +37,14 @@ const styles = theme => ({
   toolbarButtonIcon: {
     fontSize: 30,
   },
+  leftToolbarItem: {
+    marginLeft: -20,
+    marginRight: 0,
+  },
+  rightToolbarItem: {
+    marginLeft: 20,
+    marginRight: -14,
+  }
 });
 
 export default styles;

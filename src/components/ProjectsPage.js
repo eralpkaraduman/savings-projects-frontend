@@ -22,6 +22,25 @@ class ProjectsPage extends Component {
     this.updateProjects();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const {pending, error} = this.state;
+    const {onStatusChanged} = this.props;
+    const pendingChanged = pending !== prevState.pending;
+    const errorChanged = error !== prevState.error;
+    if (pendingChanged || errorChanged) {
+      if (pending) {
+        onStatusChanged('pending');
+      }
+      else if (error) {
+        onStatusChanged('failed');
+      }
+      else {
+        onStatusChanged('ready');
+      }
+    }
+  }
+
+
   async updateProjects() {
     const { apiRoot } = this.props;
     this.setState({pending: true})
@@ -75,7 +94,8 @@ class ProjectsPage extends Component {
 
 ProjectsPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  apiRoot: PropTypes.string.isRequired
+  apiRoot: PropTypes.string.isRequired,
+  onStatusChanged: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ProjectsPage);

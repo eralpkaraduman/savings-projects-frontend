@@ -8,7 +8,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-import classNames from 'classnames';
 import styles from './styles';
 import config from './config';
 import ProjectsPage from './components/ProjectsPage'
@@ -30,16 +29,14 @@ class App extends Component {
   }
 
   handleOnRefreshClicked() {
+    // Using react refs for the sake of simplicity, if project had,
+    // more pages it would make sense to use redux instead.
     this.currentPage && this.currentPage.refresh();
   }
 
   handleOnProjectsPageStatusChanged(status) {
-    if (status === 'pending') {
-      this.setState({ contentDataPending: true });
-    }
-    else {
-      this.setState({ contentDataPending: false });
-    }
+    const contentPending = status === 'pending';
+    this.setState({ contentPending });
   }
 
   render() {
@@ -48,21 +45,26 @@ class App extends Component {
     return (
       <div className="App">
         <AppBar position='sticky'>
-          <Toolbar>
-            <IconButton color="inherit" aria-label="Menu">
-              <MenuIcon className={ classNames(classes.toolbarButtonIcon) } />
+          <Toolbar >
+            <IconButton color="inherit" className={ classes.leftToolbarItem }>
+              <MenuIcon className={ classes.toolbarButtonIcon } />
             </IconButton>
-            <Typography variant="title" color="inherit" className={ classes.grow }>
+            <Typography align="left" variant="title" color="inherit" className={ classes.grow }>
               Savings Projects
             </Typography>
-            { contentPending ?
+            { false || contentPending ?
               <CircularProgress
                 color="inherit"
                 size={ 30 }
                 thickness={ 5 }
+                className={ classes.rightToolbarItem }
               /> :
-              <IconButton color="inherit" onClick={ () => this.handleOnRefreshClicked() }>
-                <RefreshIcon className={ classNames(classes.toolbarButtonIcon) } />
+              <IconButton
+                color="inherit"
+                onClick={ () => this.handleOnRefreshClicked() }
+                className={ classes.rightToolbarItem }
+              >
+                <RefreshIcon className={ classes.toolbarButtonIcon } />
               </IconButton>
             }
           </Toolbar>
@@ -72,7 +74,7 @@ class App extends Component {
             <ProjectsPage
               innerRef={ currentPage => this.currentPage = currentPage }
               apiRoot={ config.apiRoot }
-              onStatusChanged={ () => this.handleOnProjectsPageStatusChanged() }
+              onStatusChanged={ status => this.handleOnProjectsPageStatusChanged(status) }
             />
           </Grid>
         </Grid>
