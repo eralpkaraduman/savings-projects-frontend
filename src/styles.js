@@ -10,9 +10,9 @@ const styles = theme => ({
   },
   pageRoot: {
     flexGrow: 1,
-    paddingTop: 0,
-    padding: 24,
     margin: 0,
+    padding: 10,
+    paddingTop: 0,
   },
   grow: {
     flexGrow: 1,
@@ -33,6 +33,9 @@ const styles = theme => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.background.default,
     },
+  },
+  toolbarButtonIcon: {
+    fontSize: 30,
   },
 });
 

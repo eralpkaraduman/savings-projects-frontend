@@ -9,10 +9,17 @@ import ProjectsTable from './ProjectsTable';
 
 class ProjectsPage extends Component {
 
-  state = {
-    pending: false,
-    error: null,
-    projects: []
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: false,
+      error: null,
+      projects: []
+    }
+  }
+
+  refresh() {
+    this.updateProjects();
   }
 
   async updateProjects() {
@@ -44,7 +51,7 @@ class ProjectsPage extends Component {
       });
     }
   }
-  
+
   componentDidMount() {
     this.updateProjects();
   }
