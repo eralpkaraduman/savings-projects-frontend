@@ -15,26 +15,76 @@ import {
   renderCurrency,
   renderDate,
   renderNumber,
-  sortProjectsBy
+  numberValueComparator,
+  dateValueComparator,
+  sortListByComparators
 } from './helpers'
 
+const sortComperatorsForProps = {
+  'project': numberValueComparator,
+  'start date': dateValueComparator
+}
+
+const sortDirectionsForProps = {
+  'project': 'sortedByProjectDescending',
+  'start date': 'sortedByStartDateDescending'
+}
+
 class ProjectsTable extends Component {
-  state = {
-    sortedById: 'project',
-    sortedDescending: true
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      sortedProjects: [],
+      sortOrder: ['project', 'start date'],
+      sortedByProjectDescending: true,
+      sortedByStartDateDescending: true
+    }
   }
 
-  handleOnSortByProject(id, descending) {
+  handleOnSortById(prop, descending) {
+    const sortOrder = [...this.state.sortOrder]; // needs to be mutated
+    // moves last clicked sort column property to begining of the sorting order list
+    sortOrder.sort(a => a !== prop);
+
     this.setState({
-      sortedById: id,
-      sortedDescending: descending
-    })
+      sortOrder,
+      [sortDirectionsForProps[prop]]: descending
+    });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const projectsChanged = nextProps.projects !== this.props.projects;
+    
+    const sortOrderChanged = String(nextState.sortOrder) !== String(this.state.sortOrder);
+    
+    const [firstSortOrderProp] = nextState.sortOrder;
+    const wasFirstOrderDescending = this.state[sortDirectionsForProps[firstSortOrderProp]];
+    const isFirstOrderDescending = nextState[sortDirectionsForProps[firstSortOrderProp]];
+    const sortDirectionChanged = isFirstOrderDescending !== wasFirstOrderDescending;
+
+    if (projectsChanged || sortOrderChanged || sortDirectionChanged) {
+      // sorting happens here
+      const sortComperators = nextState.sortOrder.map(prop => {
+        const descending = nextState[sortDirectionsForProps[prop]];
+        const comperator = sortComperatorsForProps[prop];
+        return comperator(prop, descending);
+      });
+
+      this.setState({ 
+        sortedProjects: sortListByComparators(sortComperators, nextProps.projects)
+      });
+    }
   }
 
   render() {
-    const {classes, projects} = this.props;
-    const {sortedById, sortedDescending} = this.state;
-    const sortedProjects = sortProjectsBy(sortedById, projects, sortedDescending);
+    const {classes} = this.props;
+    const { 
+      sortedByProjectDescending,
+      sortedByStartDateDescending,
+      sortedProjects
+    } = this.state;
+
     return (
       <Table className={classes.table}>
         <TableHead>
@@ -43,16 +93,25 @@ class ProjectsTable extends Component {
             <StyledTableCell numeric>
               <SortableColumnLabel
                 id='project'
-                active={sortedById === 'project'}
-                descending={sortedDescending}
-                onSortRequested={(...args) => this.handleOnSortByProject(...args)}
+                active
+                descending={ sortedByProjectDescending }
+                onSortRequested={ (id, descending) => this.handleOnSortById(id, descending)}
               >
                 Project
               </SortableColumnLabel>
             </StyledTableCell>
             <StyledTableCell>Category</StyledTableCell>
             <StyledTableCell>Description</StyledTableCell>
-            <StyledTableCell>Start Date</StyledTableCell>
+            <StyledTableCell>
+              <SortableColumnLabel
+                id='start date'
+                active
+                descending={ sortedByStartDateDescending }
+                onSortRequested={ (id, descending) => this.handleOnSortById(id, descending) }
+              >
+                Start Date
+              </SortableColumnLabel>
+            </StyledTableCell>
             <StyledTableCell numeric>Savings Amount</StyledTableCell>
             <StyledTableCell>Currency</StyledTableCell>
             <StyledTableCell>Complexity</StyledTableCell>

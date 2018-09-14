@@ -47,20 +47,22 @@ export function renderNumber(value) {
   return numeral(value).format('0');
 }
 
-const byNumberValue = (prop, projects, descending) => (a, b) => {
-  a = parseInt(a[prop], 10);
-  b = parseInt(b[prop], 10);
-  if (descending) {
-    return b - a;
-  }
-  else {
-    return a - b;
-  }
+export const numberValueComparator = (prop, descending) => (a, b) => {
+  const x = descending ? b : a;
+  const y = descending ? a : b;
+  return parseInt(x[prop], 10) - parseInt(y[prop], 10);
 };
 
-export function sortProjectsBy(prop, projects, descending) {
-  if (prop === 'project') {
-    return projects.sort(byNumberValue(prop, projects, descending));
-  }
-  return projects;
+export const dateValueComparator = (prop, descending) => (a, b) => {
+  const x = descending ? b : a;
+  const y = descending ? a : b;
+  return moment(x[prop]).diff(moment(y[prop]));
+};
+
+export function sortListByComparators(comperators = [], list) {
+  return list.sort((a, b) => {
+    let result = 0;
+    comperators.forEach(c => result = result || c(a, b));
+    return result;
+  });
 }

@@ -10,12 +10,13 @@ import ProjectsTable from './ProjectsTable';
 import SearchField from './SearchField';
 
 class ProjectsPage extends Component {
-
+  
   constructor(props) {
     super(props);
     this.state = {
       pending: false,
       error: null,
+      projectSearchQuery: '',
       projects: []
     }
   }
@@ -24,6 +25,10 @@ class ProjectsPage extends Component {
     this.updateProjects();
   }
 
+  componentDidMount() {
+    this.updateProjects();
+  }
+  
   componentDidUpdate(prevProps, prevState) {
     const {pending, error} = this.state;
     const {onStatusChanged} = this.props;
@@ -41,7 +46,6 @@ class ProjectsPage extends Component {
       }
     }
   }
-
 
   async updateProjects() {
     const { apiRoot } = this.props;
@@ -73,8 +77,8 @@ class ProjectsPage extends Component {
     }
   }
 
-  componentDidMount() {
-    this.updateProjects();
+  handleOnSearchValueChanged(value) {
+    this.setState({ projectSearchQuery: value});
   }
 
   render() {
@@ -84,6 +88,7 @@ class ProjectsPage extends Component {
       <Grid container className={classes.pageRoot}>
         <Grid item xs={12}>
           <SearchField
+            onValueChanged={(value) => this.handleOnSearchValueChanged(value)}
           />
         </Grid>
         <Grid item xs={12}>

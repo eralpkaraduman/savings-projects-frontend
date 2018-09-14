@@ -1,5 +1,3 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
-
 const minPageWidth = 650;
 const pagePadding = 24;
 const minTableWidth = minPageWidth - pagePadding * 2;
@@ -49,21 +47,10 @@ const styles = theme => ({
   },
   search: {
     position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing.unit,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 3,
-      width: 'auto',
-    },
+    alignItems: 'center'
   },
   searchIcon: {
-    margin: 0,
-    marginLeft: -2,
+    marginLeft: theme.spacing.unit * 2,
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -74,7 +61,6 @@ const styles = theme => ({
   searchContainer: {
     width: '100%',
     marginTop: theme.spacing.unit * 2,
-    overflowX: 'auto',
   },
   searchInputRoot: {
     color: 'inherit',
@@ -82,14 +68,25 @@ const styles = theme => ({
   },
   searchInputInput: {
     paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
+    paddingRight: theme.spacing.unit * 2 + 30,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: 30,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
+    paddingLeft: theme.spacing.unit * 2 + 30,
+    
+    width: '100%'
+  },
+  clearSearchButton: {
+    marginLeft: 'auto',
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 2,
+    top: 2
+  },
+  clearSearchButtonIcon: {
+    fontSize: 20
   }
 });
 
