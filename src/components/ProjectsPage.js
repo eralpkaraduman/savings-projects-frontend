@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Fuse from 'fuse.js';
 
 import styles from '../styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -9,16 +10,28 @@ import Paper from '@material-ui/core/Paper';
 import ProjectsTable from './ProjectsTable';
 import SearchField from './SearchField';
 
+const fuseOptions = {
+  shouldSort: true,
+  threshold: 0.5,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 64,
+  minMatchCharLength: 1,
+  keys: ['description']
+}
+
 class ProjectsPage extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
       pending: false,
       error: null,
       projectSearchQuery: '',
-      projects: []
+      projects: [],
+      filteredProjects: []
     }
+    this.fuse = new Fuse([], fuseOptions);
   }
 
   refresh() {
@@ -28,7 +41,7 @@ class ProjectsPage extends Component {
   componentDidMount() {
     this.updateProjects();
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     const {pending, error} = this.state;
     const {onStatusChanged} = this.props;
@@ -45,6 +58,25 @@ class ProjectsPage extends Component {
         onStatusChanged('ready');
       }
     }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const { projectSearchQuery } = nextState;
+
+    const projectsUpdated = nextState.projects !== this.state.projects;
+
+    const queryChanged = projectSearchQuery !== this.state.projectSearchQuery;
+
+    if (projectsUpdated) {
+      this.fuse = new Fuse(nextState.projects, fuseOptions);
+    }
+
+    if (queryChanged) {
+      this.setState({
+        filteredProjects: this.fuse.search(projectSearchQuery)
+      });
+    }
+
   }
 
   async updateProjects() {
@@ -78,12 +110,15 @@ class ProjectsPage extends Component {
   }
 
   handleOnSearchValueChanged(value) {
-    this.setState({ projectSearchQuery: value});
+    this.setState({
+      projectSearchQuery: value.trim()
+    });
   }
 
   render() {
     const { classes } = this.props;
-    const { projects } = this.state;
+    const { projects, projectSearchQuery, filteredProjects } = this.state;
+    const shouldDisplayfilteredProjects = projectSearchQuery.length >= 2;
     return (
       <Grid container className={classes.pageRoot}>
         <Grid item xs={12}>
@@ -94,7 +129,7 @@ class ProjectsPage extends Component {
         <Grid item xs={12}>
           <Paper className={classes.tableRoot}>
             <ProjectsTable
-              projects={projects}
+              projects={shouldDisplayfilteredProjects ? filteredProjects : projects}
             />
           </Paper>
         </Grid>

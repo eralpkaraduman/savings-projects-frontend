@@ -31,7 +31,7 @@ const sortDirectionsForProps = {
 }
 
 class ProjectsTable extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -43,8 +43,8 @@ class ProjectsTable extends Component {
   }
 
   handleOnSortById(prop, descending) {
+    // moving last clicked sort column property to begining of the sorting order list
     const sortOrder = [...this.state.sortOrder]; // needs to be mutated
-    // moves last clicked sort column property to begining of the sorting order list
     sortOrder.sort(a => a !== prop);
 
     this.setState({
@@ -55,9 +55,9 @@ class ProjectsTable extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     const projectsChanged = nextProps.projects !== this.props.projects;
-    
+
     const sortOrderChanged = String(nextState.sortOrder) !== String(this.state.sortOrder);
-    
+
     const [firstSortOrderProp] = nextState.sortOrder;
     const wasFirstOrderDescending = this.state[sortDirectionsForProps[firstSortOrderProp]];
     const isFirstOrderDescending = nextState[sortDirectionsForProps[firstSortOrderProp]];
@@ -71,7 +71,7 @@ class ProjectsTable extends Component {
         return comperator(prop, descending);
       });
 
-      this.setState({ 
+      this.setState({
         sortedProjects: sortListByComparators(sortComperators, nextProps.projects)
       });
     }
@@ -79,7 +79,7 @@ class ProjectsTable extends Component {
 
   render() {
     const {classes} = this.props;
-    const { 
+    const {
       sortedByProjectDescending,
       sortedByStartDateDescending,
       sortedProjects
@@ -89,7 +89,7 @@ class ProjectsTable extends Component {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <StyledTableCell>Responsible</StyledTableCell>
+
             <StyledTableCell numeric>
               <SortableColumnLabel
                 id='project'
@@ -100,8 +100,7 @@ class ProjectsTable extends Component {
                 Project
               </SortableColumnLabel>
             </StyledTableCell>
-            <StyledTableCell>Category</StyledTableCell>
-            <StyledTableCell>Description</StyledTableCell>
+
             <StyledTableCell>
               <SortableColumnLabel
                 id='start date'
@@ -112,6 +111,10 @@ class ProjectsTable extends Component {
                 Start Date
               </SortableColumnLabel>
             </StyledTableCell>
+
+            <StyledTableCell>Description</StyledTableCell>
+            <StyledTableCell>Responsible</StyledTableCell>
+            <StyledTableCell>Category</StyledTableCell>
             <StyledTableCell numeric>Savings Amount</StyledTableCell>
             <StyledTableCell>Currency</StyledTableCell>
             <StyledTableCell>Complexity</StyledTableCell>
@@ -121,16 +124,12 @@ class ProjectsTable extends Component {
           {sortedProjects.map((project, index) => (
             <TableRow className={classes.tableRow} key={index}>
 
-              <StyledTableCell>
-                {renderText(project.responsible)}
-              </StyledTableCell>
-
               <StyledTableCell numeric>
                 {renderNumber(project.project)}
               </StyledTableCell>
 
               <StyledTableCell>
-                {renderText(project.category)}
+                {renderDate(project['start date'])}
               </StyledTableCell>
 
               <StyledTableCell>
@@ -138,7 +137,11 @@ class ProjectsTable extends Component {
               </StyledTableCell>
 
               <StyledTableCell>
-                {renderDate(project['start date'])}
+                {renderText(project.responsible)}
+              </StyledTableCell>
+
+              <StyledTableCell>
+                {renderText(project.category)}
               </StyledTableCell>
 
               <StyledTableCell numeric>
