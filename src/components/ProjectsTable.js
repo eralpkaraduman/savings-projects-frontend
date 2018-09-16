@@ -20,14 +20,15 @@ import {
   sortListByComparators,
 } from './helpers';
 
-const sortComperatorsForProps = { // TODO: rename prop to something else
-  project: numberValueComparator,
-  'start date': dateValueComparator,
-};
-
-const sortDirectionsForProps = { // TODO: rename prop to something else
-  project: 'sortedByProjectDescending',
-  'start date': 'sortedByStartDateDescending',
+const SortableProjectKeys = {
+  project: {
+    stateDirectionKey: 'sortedByProjectDescending',
+    comperator: numberValueComparator,
+  },
+  'start date': {
+    stateDirectionKey: 'sortedByStartDateDescending',
+    comperator: dateValueComparator,
+  },
 };
 
 class ProjectsTable extends Component {
@@ -50,22 +51,20 @@ class ProjectsTable extends Component {
     const { sortOrder: prevSortOrder } = this.state;
     const sortOrderChanged = String(nextSortOrder) !== String(prevSortOrder);
 
-    const [firstSortOrderProp] = nextState.sortOrder; // TODO: rename prop to something else
-    // TODO: rename prop to something else
-    const { [sortDirectionsForProps[firstSortOrderProp]]: isDescending } = nextState;
-    // TODO: rename prop to something else
-    const { [sortDirectionsForProps[firstSortOrderProp]]: wasDescending } = this.state;
+    const [firstKeyInSortOrder] = nextState.sortOrder;
+    const { stateDirectionKey: firstDirectionKey } = SortableProjectKeys[firstKeyInSortOrder];
+
+    const { [firstDirectionKey]: isDescending } = nextState;
+    const { [firstDirectionKey]: wasDescending } = this.state;
 
     const sortDirectionChanged = isDescending !== wasDescending;
 
     if (projectsChanged || sortOrderChanged || sortDirectionChanged) {
       // sorting happens here
-      const sortComperators = nextState.sortOrder.map((prop) => {
-        // TODO: rename prop to something else
-        const descending = nextState[sortDirectionsForProps[prop]];
-        // TODO: rename prop to something else
-        const comperator = sortComperatorsForProps[prop]; // TODO: rename prop to something else
-        return comperator(prop, descending); // TODO: rename prop to something else
+      const sortComperators = nextState.sortOrder.map((key) => {
+        const { stateDirectionKey, comperator } = SortableProjectKeys[key];
+        const descending = nextState[stateDirectionKey];
+        return comperator(key, descending);
       });
 
       this.setState({
@@ -74,13 +73,15 @@ class ProjectsTable extends Component {
     }
   }
 
-  handleOnSortById(prop, descending) { // TODO: rename prop to something else
-    // moving last clicked sort column property to begining of the sorting order list
+  handleOnSortById(projectDataKey, descending) {
     const { sortOrder: newSortOrder } = this.state;
-    newSortOrder.sort(a => a !== prop); // TODO: rename prop to something else
+    const { stateDirectionKey } = SortableProjectKeys[projectDataKey];
+    // moving last clicked sort column property to begining of the sorting order list
+    // moving last clicked sort column property to begining of the sorting order list
+    newSortOrder.sort(key => key !== projectDataKey);
     this.setState({
       sortOrder: newSortOrder,
-      [sortDirectionsForProps[prop]]: descending, // TODO: rename prop to something else
+      [stateDirectionKey]: descending,
     });
   }
 
@@ -90,7 +91,10 @@ class ProjectsTable extends Component {
       sortedByProjectDescending,
       sortedByStartDateDescending,
       sortedProjects,
+      sortOrder,
     } = this.state;
+
+    const [firstSortOrderKey] = sortOrder;
 
     return (
       <Table className={classes.table}>
@@ -100,7 +104,7 @@ class ProjectsTable extends Component {
             <StyledTableCell numeric>
               <SortableColumnLabel
                 id="project"
-                active
+                active={firstSortOrderKey === 'project'}
                 descending={sortedByProjectDescending}
                 onSortRequested={(id, descending) => this.handleOnSortById(id, descending)}
               >
@@ -111,7 +115,7 @@ class ProjectsTable extends Component {
             <StyledTableCell>
               <SortableColumnLabel
                 id="start date"
-                active
+                active={firstSortOrderKey === 'start date'}
                 descending={sortedByStartDateDescending}
                 onSortRequested={(id, descending) => this.handleOnSortById(id, descending)}
               >

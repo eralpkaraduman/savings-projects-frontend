@@ -8,6 +8,7 @@ import { darken } from '@material-ui/core/styles/colorManipulator';
 const StyledTableSortLabel = withStyles(theme => ({
   active: {
     color: 'inherit',
+    opacity: 1,
   },
   root: {
     '&:hover': {
@@ -18,7 +19,7 @@ const StyledTableSortLabel = withStyles(theme => ({
     },
   },
   icon: {
-    opacity: 1,
+    opacity: 0,
   },
 }))(TableSortLabel);
 
