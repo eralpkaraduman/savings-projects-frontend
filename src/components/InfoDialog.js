@@ -8,57 +8,55 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-class InfoDialog extends React.Component {
-  render() {
-    const { fullScreen, open, onCloseRequested } = this.props;
-    return (
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        onClose={() => onCloseRequested()}
-      >
-        <DialogTitle id="responsive-dialog-title">About this site</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <p>Hi!</p>
-            <p>
-              This project was made by Eralp Karaduman as a coding assignment on September 2016.
-              Visit&nbsp;
-              <a
-                href="http://eralpkaraduman.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                eralpkaraduman.com
-              </a>
-              &nbsp;to learn about me.
-            </p>
-            <p>
-              Open source at&nbsp;
-              <a
-                href="https://github.com/eralpkaraduman/savings-projects-frontend"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                github.com/eralpkaraduman/savings-projects-frontend
-              </a>
-            </p>
-            <p>
-              Built using create-react-app &amp; material-ui.
-            </p>
-            <p>
-              Click the dismiss button below to close this message.
-            </p>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
-            Dismiss
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+function InfoDialog(props) {
+  const { fullScreen, open, onCloseRequested } = props;
+  return (
+    <Dialog
+      fullScreen={fullScreen}
+      open={open}
+      onClose={() => onCloseRequested()}
+    >
+      <DialogTitle id="responsive-dialog-title">About this site</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          <p>Hi!</p>
+          <p>
+            This project was made by Eralp Karaduman as a coding assignment on September 2016.
+            Visit&nbsp;
+            <a
+              href="http://eralpkaraduman.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              eralpkaraduman.com
+            </a>
+            &nbsp;to learn about me.
+          </p>
+          <p>
+            Open source at&nbsp;
+            <a
+              href="https://github.com/eralpkaraduman/savings-projects-frontend"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              github.com/eralpkaraduman/savings-projects-frontend
+            </a>
+          </p>
+          <p>
+            Built using create-react-app &amp; material-ui.
+          </p>
+          <p>
+            Click the dismiss button below to close this message.
+          </p>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => onCloseRequested()} color="primary">
+          Dismiss
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 InfoDialog.propTypes = {
