@@ -118,8 +118,8 @@ class ProjectsPage extends Component {
     const { projects, projectSearchQuery, filteredProjects } = this.state;
     const shouldDisplayfilteredProjects = projectSearchQuery.length >= 2;
     return (
-      <Grid container className={classes.pageRoot}>
-        <Grid item xs={12}>
+      <Grid container className={classes.pageRoot} justify="center">
+        <Grid item xs={12} sm={8} md={6} lg={4}>
           <SearchField
             onValueChanged={value => this.handleOnSearchValueChanged(value)}
           />
