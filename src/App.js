@@ -9,12 +9,13 @@ import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import MenuIcon from '@material-ui/icons/Menu';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './App.css';
 import styles from './styles';
 import config from './config';
 import ProjectsPage from './components/ProjectsPage';
+import InfoDialog from './components/InfoDialog';
 
 class App extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class App extends Component {
     this.currentPage = null;
     this.state = {
       contentPending: false,
+      infoDialogOpen: false,
     };
   }
 
@@ -42,15 +44,31 @@ class App extends Component {
     }
   }
 
+  handleOnInfoButtonClicked() {
+    this.setState({ infoDialogOpen: true });
+  }
+
+  handleOnInfoDialogCloseRequested() {
+    this.setState({ infoDialogOpen: false });
+  }
+
   render() {
-    const { contentPending } = this.state;
+    const { contentPending, infoDialogOpen } = this.state;
     const { classes } = this.props;
     return (
       <div className="App">
+        <InfoDialog
+          open={infoDialogOpen}
+          onCloseRequested={() => this.handleOnInfoDialogCloseRequested()}
+        />
         <AppBar position="sticky">
           <Toolbar>
-            <IconButton color="inherit" className={classes.leftToolbarItem}>
-              <MenuIcon className={classes.toolbarButtonIcon} />
+            <IconButton
+              color="inherit"
+              className={classes.leftToolbarItem}
+              onClick={() => this.handleOnInfoButtonClicked()}
+            >
+              <InfoOutlinedIcon className={classes.toolbarButtonIcon} />
             </IconButton>
             <Typography align="left" variant="title" color="inherit" className={classes.grow}>
               Savings Projects
