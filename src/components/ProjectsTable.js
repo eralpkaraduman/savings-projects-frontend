@@ -42,41 +42,42 @@ class ProjectsTable extends Component {
     };
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    const { projects: nextProjects } = nextProps;
-    const { projects: prevProjects } = this.props;
+  componentDidUpdate(prevProps, prevState) {
+    const { projects: nextProjects } = this.props;
+    const { projects: prevProjects } = prevProps;
     const projectsChanged = nextProjects !== prevProjects;
 
-    const { sortOrder: nextSortOrder } = nextState;
-    const { sortOrder: prevSortOrder } = this.state;
+    const { sortOrder: nextSortOrder } = this.state;
+    const { sortOrder: prevSortOrder } = prevState;
     const sortOrderChanged = String(nextSortOrder) !== String(prevSortOrder);
 
-    const [firstKeyInSortOrder] = nextState.sortOrder;
+    const [firstKeyInSortOrder] = nextSortOrder;
     const { stateDirectionKey: firstDirectionKey } = SortableProjectKeys[firstKeyInSortOrder];
 
-    const { [firstDirectionKey]: isDescending } = nextState;
-    const { [firstDirectionKey]: wasDescending } = this.state;
+    const { [firstDirectionKey]: isDescending } = this.state;
+    const { [firstDirectionKey]: wasDescending } = prevState;
 
     const sortDirectionChanged = isDescending !== wasDescending;
 
+    // deciding if table needs to be sorted
     if (projectsChanged || sortOrderChanged || sortDirectionChanged) {
-      // sorting happens here
-      const sortComperators = nextState.sortOrder.map((key) => {
+      const sortComperators = nextSortOrder.map((key) => {
         const { stateDirectionKey, comperator } = SortableProjectKeys[key];
-        const descending = nextState[stateDirectionKey];
+        const { [stateDirectionKey]: descending } = this.state;
         return comperator(key, descending);
       });
 
-      this.setState({
-        sortedProjects: sortListByComparators(sortComperators, nextProps.projects),
-      });
+      // sorting happens here
+      const newSortedProjects = sortListByComparators(sortComperators, nextProjects);
+      // suppressing eslint warning, safe to update only when sorting was necessary
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ sortedProjects: newSortedProjects });
     }
   }
 
   handleOnSortById(projectDataKey, descending) {
     const { sortOrder: newSortOrder } = this.state;
     const { stateDirectionKey } = SortableProjectKeys[projectDataKey];
-    // moving last clicked sort column property to begining of the sorting order list
     // moving last clicked sort column property to begining of the sorting order list
     newSortOrder.sort(key => key !== projectDataKey);
     this.setState({
@@ -133,6 +134,8 @@ class ProjectsTable extends Component {
         </TableHead>
         <TableBody>
           {sortedProjects.map((project, index) => (
+            // project items do not have any unique identifiers so we'll have to use map index
+            // eslint-disable-next-line react/no-array-index-key
             <TableRow className={classes.tableRow} key={index}>
 
               <StyledTableCell numeric>

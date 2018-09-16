@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './App.css';
 
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-
-
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import './App.css';
 import styles from './styles';
 import config from './config';
 import ProjectsPage from './components/ProjectsPage';
-
 
 class App extends Component {
   constructor(props) {
@@ -38,8 +35,8 @@ class App extends Component {
   }
 
   handleOnRefreshClicked() {
-    // Using react refs for the sake of simplicity, if project had,
-    // more pages it would make sense to use redux instead.
+    // Using react refs to call actions on children, for the sake of simplicity,
+    // if project more pages it would make sense to use redux, mobx etc.
     if (this.currentPage) {
       this.currentPage.refresh();
     }

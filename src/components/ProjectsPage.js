@@ -75,7 +75,7 @@ class ProjectsPage extends Component {
       const newFilteredProjects = this.fuse.search(nextProjectSearchQuery);
       const { filteredProjects: currentFilteredProjects } = this.state;
       if (currentFilteredProjects !== newFilteredProjects) {
-        // suppressing eslint warning, safe to update only done when query & result changes
+        // suppressing eslint warning, safe to update only when query & result changes
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ filteredProjects: newFilteredProjects });
       }
