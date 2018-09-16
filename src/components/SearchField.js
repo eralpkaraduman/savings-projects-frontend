@@ -35,7 +35,7 @@ class SearchField extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, disabled } = this.props;
     const { inputValue } = this.state;
     const shouldDisplayClearButton = inputValue.length > 0;
     return (
@@ -47,6 +47,7 @@ class SearchField extends Component {
           <Input
             fullWidth
             disableUnderline
+            disabled={disabled}
             value={inputValue}
             placeholder="Search…"
             onChange={e => this.handleOnInputChanged(e)}
@@ -58,6 +59,7 @@ class SearchField extends Component {
           { shouldDisplayClearButton && (
             <IconButton
               color="inherit"
+              disabled={disabled}
               onClick={() => this.handleOnClearClicked()}
               className={classes.clearSearchButton}
             >
@@ -70,7 +72,12 @@ class SearchField extends Component {
   }
 }
 
+SearchField.defaultProps = {
+  disabled: false,
+};
+
 SearchField.propTypes = {
+  disabled: PropTypes.bool,
   onValueChanged: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 };
