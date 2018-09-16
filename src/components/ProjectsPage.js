@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Fuse from 'fuse.js';
 
-import styles from '../styles';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
+import styles from '../styles';
 import ProjectsTable from './ProjectsTable';
 import SearchField from './SearchField';
 
@@ -17,11 +17,10 @@ const fuseOptions = {
   distance: 100,
   maxPatternLength: 64,
   minMatchCharLength: 1,
-  keys: ['description']
-}
+  keys: ['description'],
+};
 
 class ProjectsPage extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -29,43 +28,24 @@ class ProjectsPage extends Component {
       error: null,
       projectSearchQuery: '',
       projects: [],
-      filteredProjects: []
-    }
+      filteredProjects: [],
+    };
     this.fuse = new Fuse([], fuseOptions);
   }
 
-  refresh() {
-    this.updateProjects();
-  }
 
   componentDidMount() {
     this.updateProjects();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const {pending, error} = this.state;
-    const {onStatusChanged} = this.props;
-    const pendingChanged = pending !== prevState.pending;
-    const errorChanged = error !== prevState.error;
-    if (pendingChanged || errorChanged) {
-      if (pending) {
-        onStatusChanged('pending');
-      }
-      else if (error) {
-        onStatusChanged('failed');
-      }
-      else {
-        onStatusChanged('ready');
-      }
-    }
-  }
-
   componentWillUpdate(nextProps, nextState) {
-    const { projectSearchQuery } = nextState;
+    const { projects: nextProjects } = nextState;
+    const { projects: prevProjects } = this.state;
+    const projectsUpdated = nextProjects !== prevProjects;
 
-    const projectsUpdated = nextState.projects !== this.state.projects;
-
-    const queryChanged = projectSearchQuery !== this.state.projectSearchQuery;
+    const { projectSearchQuery: nextProjectSearchQuery } = nextState;
+    const { projectSearchQuery: prevProjectSearchQuery } = this.state;
+    const queryChanged = nextProjectSearchQuery !== prevProjectSearchQuery;
 
     if (projectsUpdated) {
       this.fuse = new Fuse(nextState.projects, fuseOptions);
@@ -73,16 +53,35 @@ class ProjectsPage extends Component {
 
     if (queryChanged) {
       this.setState({
-        filteredProjects: this.fuse.search(projectSearchQuery)
+        filteredProjects: this.fuse.search(nextProjectSearchQuery),
       });
     }
+  }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { pending, error } = this.state;
+    const { onStatusChanged } = this.props;
+    const pendingChanged = pending !== prevState.pending;
+    const errorChanged = error !== prevState.error;
+    if (pendingChanged || errorChanged) {
+      if (pending) {
+        onStatusChanged('pending');
+      } else if (error) {
+        onStatusChanged('failed');
+      } else {
+        onStatusChanged('ready');
+      }
+    }
+  }
+
+  refresh() {
+    this.updateProjects();
   }
 
   async updateProjects() {
     const { apiRoot } = this.props;
-    this.setState({pending: true})
-    const response = await fetch(`${apiRoot}/data`)
+    this.setState({ pending: true });
+    const response = await fetch(`${apiRoot}/data`);
     if (response.ok) {
       try {
         const projects = await response.json();
@@ -92,26 +91,25 @@ class ProjectsPage extends Component {
         this.setState({
           projects,
           pending: false,
-          error: null
+          error: null,
         });
-      } catch(err) {
-          this.setState({
-            pending: false,
-            error: `Failed to parse response`
-          });
+      } catch (err) {
+        this.setState({
+          pending: false,
+          error: 'Failed to parse response',
+        });
       }
-    }
-    else {
+    } else {
       this.setState({
         pending: false,
-        error: 'Failed to fetch projects'
+        error: 'Failed to fetch projects',
       });
     }
   }
 
   handleOnSearchValueChanged(value) {
     this.setState({
-      projectSearchQuery: value.trim()
+      projectSearchQuery: value.trim(),
     });
   }
 
@@ -123,7 +121,7 @@ class ProjectsPage extends Component {
       <Grid container className={classes.pageRoot}>
         <Grid item xs={12}>
           <SearchField
-            onValueChanged={(value) => this.handleOnSearchValueChanged(value)}
+            onValueChanged={value => this.handleOnSearchValueChanged(value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -141,7 +139,7 @@ class ProjectsPage extends Component {
 ProjectsPage.propTypes = {
   classes: PropTypes.object.isRequired,
   apiRoot: PropTypes.string.isRequired,
-  onStatusChanged: PropTypes.func.isRequired
+  onStatusChanged: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ProjectsPage);

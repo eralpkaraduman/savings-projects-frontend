@@ -6,4 +6,3 @@ import 'whatwg-fetch';
 import 'babel-polyfill';
 
 ReactDOM.render(<App />, document.getElementById('root'));
-

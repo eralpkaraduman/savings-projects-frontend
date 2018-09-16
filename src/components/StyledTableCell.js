@@ -5,11 +5,11 @@ const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   body: {
     fontSize: 14,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
 }))(TableCell);
 

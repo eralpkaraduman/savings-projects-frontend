@@ -29,11 +29,11 @@ export function renderText(value) {
 }
 
 export function renderCurrency(value) {
-  value = parseFloat(value);
-  if (isNaN(value)) {
+  const floatValue = parseFloat(value);
+  if (Number.isNaN(floatValue)) {
     return emptyValue;
   }
-  return numeral(value).format(currencyFormat);
+  return numeral(floatValue).format(currencyFormat);
 }
 
 export function renderDate(value) {
@@ -41,7 +41,7 @@ export function renderDate(value) {
 }
 
 export function renderNumber(value) {
-  if (isNaN(parseInt(value, 10))) {
+  if (Number.isNaN(parseInt(value, 10))) {
     return undefined;
   }
   return numeral(value).format('0');
@@ -62,7 +62,9 @@ export const dateValueComparator = (prop, descending) => (a, b) => {
 export function sortListByComparators(comperators = [], list) {
   return list.sort((a, b) => {
     let result = 0;
-    comperators.forEach(c => result = result || c(a, b));
+    comperators.forEach((comperator) => {
+      result = result || comperator(a, b);
+    });
     return result;
   });
 }

@@ -47,7 +47,7 @@ const styles = theme => ({
   },
   search: {
     position: 'relative',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   searchIcon: {
     marginLeft: theme.spacing.unit * 2,
@@ -71,8 +71,7 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 2 + 30,
     paddingBottom: theme.spacing.unit,
     paddingLeft: theme.spacing.unit * 2 + 30,
-    
-    width: '100%'
+    width: '100%',
   },
   clearSearchButton: {
     marginLeft: 'auto',
@@ -83,11 +82,11 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     right: 2,
-    top: 2
+    top: 2,
   },
   clearSearchButtonIcon: {
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 });
 
 export default styles;

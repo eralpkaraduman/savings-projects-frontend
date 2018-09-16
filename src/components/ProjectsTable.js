@@ -17,72 +17,79 @@ import {
   renderNumber,
   numberValueComparator,
   dateValueComparator,
-  sortListByComparators
-} from './helpers'
+  sortListByComparators,
+} from './helpers';
 
-const sortComperatorsForProps = {
-  'project': numberValueComparator,
-  'start date': dateValueComparator
-}
+const sortComperatorsForProps = { // TODO: rename prop to something else
+  project: numberValueComparator,
+  'start date': dateValueComparator,
+};
 
-const sortDirectionsForProps = {
-  'project': 'sortedByProjectDescending',
-  'start date': 'sortedByStartDateDescending'
-}
+const sortDirectionsForProps = { // TODO: rename prop to something else
+  project: 'sortedByProjectDescending',
+  'start date': 'sortedByStartDateDescending',
+};
 
 class ProjectsTable extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       sortedProjects: [],
       sortOrder: ['project', 'start date'],
       sortedByProjectDescending: true,
-      sortedByStartDateDescending: true
-    }
-  }
-
-  handleOnSortById(prop, descending) {
-    // moving last clicked sort column property to begining of the sorting order list
-    const sortOrder = [...this.state.sortOrder]; // needs to be mutated
-    sortOrder.sort(a => a !== prop);
-
-    this.setState({
-      sortOrder,
-      [sortDirectionsForProps[prop]]: descending
-    });
+      sortedByStartDateDescending: true,
+    };
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const projectsChanged = nextProps.projects !== this.props.projects;
+    const { projects: nextProjects } = nextProps;
+    const { projects: prevProjects } = this.props;
+    const projectsChanged = nextProjects !== prevProjects;
 
-    const sortOrderChanged = String(nextState.sortOrder) !== String(this.state.sortOrder);
+    const { sortOrder: nextSortOrder } = nextState;
+    const { sortOrder: prevSortOrder } = this.state;
+    const sortOrderChanged = String(nextSortOrder) !== String(prevSortOrder);
 
-    const [firstSortOrderProp] = nextState.sortOrder;
-    const wasFirstOrderDescending = this.state[sortDirectionsForProps[firstSortOrderProp]];
-    const isFirstOrderDescending = nextState[sortDirectionsForProps[firstSortOrderProp]];
-    const sortDirectionChanged = isFirstOrderDescending !== wasFirstOrderDescending;
+    const [firstSortOrderProp] = nextState.sortOrder; // TODO: rename prop to something else
+    // TODO: rename prop to something else
+    const { [sortDirectionsForProps[firstSortOrderProp]]: isDescending } = nextState;
+    // TODO: rename prop to something else
+    const { [sortDirectionsForProps[firstSortOrderProp]]: wasDescending } = this.state;
+
+    const sortDirectionChanged = isDescending !== wasDescending;
 
     if (projectsChanged || sortOrderChanged || sortDirectionChanged) {
       // sorting happens here
-      const sortComperators = nextState.sortOrder.map(prop => {
+      const sortComperators = nextState.sortOrder.map((prop) => {
+        // TODO: rename prop to something else
         const descending = nextState[sortDirectionsForProps[prop]];
-        const comperator = sortComperatorsForProps[prop];
-        return comperator(prop, descending);
+        // TODO: rename prop to something else
+        const comperator = sortComperatorsForProps[prop]; // TODO: rename prop to something else
+        return comperator(prop, descending); // TODO: rename prop to something else
       });
 
       this.setState({
-        sortedProjects: sortListByComparators(sortComperators, nextProps.projects)
+        sortedProjects: sortListByComparators(sortComperators, nextProps.projects),
       });
     }
   }
 
+  handleOnSortById(prop, descending) { // TODO: rename prop to something else
+    // moving last clicked sort column property to begining of the sorting order list
+    const { sortOrder: newSortOrder } = this.state;
+    newSortOrder.sort(a => a !== prop); // TODO: rename prop to something else
+    this.setState({
+      sortOrder: newSortOrder,
+      [sortDirectionsForProps[prop]]: descending, // TODO: rename prop to something else
+    });
+  }
+
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
     const {
       sortedByProjectDescending,
       sortedByStartDateDescending,
-      sortedProjects
+      sortedProjects,
     } = this.state;
 
     return (
@@ -92,10 +99,10 @@ class ProjectsTable extends Component {
 
             <StyledTableCell numeric>
               <SortableColumnLabel
-                id='project'
+                id="project"
                 active
-                descending={ sortedByProjectDescending }
-                onSortRequested={ (id, descending) => this.handleOnSortById(id, descending)}
+                descending={sortedByProjectDescending}
+                onSortRequested={(id, descending) => this.handleOnSortById(id, descending)}
               >
                 Project
               </SortableColumnLabel>
@@ -103,10 +110,10 @@ class ProjectsTable extends Component {
 
             <StyledTableCell>
               <SortableColumnLabel
-                id='start date'
+                id="start date"
                 active
-                descending={ sortedByStartDateDescending }
-                onSortRequested={ (id, descending) => this.handleOnSortById(id, descending) }
+                descending={sortedByStartDateDescending}
+                onSortRequested={(id, descending) => this.handleOnSortById(id, descending)}
               >
                 Start Date
               </SortableColumnLabel>
@@ -166,7 +173,7 @@ class ProjectsTable extends Component {
 
 ProjectsTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  projects: PropTypes.arrayOf(PropTypes.object).isRequired
+  projects: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default withStyles(styles)(ProjectsTable);
