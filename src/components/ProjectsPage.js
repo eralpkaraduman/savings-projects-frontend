@@ -33,7 +33,6 @@ class ProjectsPage extends Component {
     this.fuse = new Fuse([], fuseOptions);
   }
 
-
   componentDidMount() {
     this.updateProjects();
   }
@@ -43,33 +42,42 @@ class ProjectsPage extends Component {
     const { projects: prevProjects } = this.state;
     const projectsUpdated = nextProjects !== prevProjects;
 
-    const { projectSearchQuery: nextProjectSearchQuery } = nextState;
-    const { projectSearchQuery: prevProjectSearchQuery } = this.state;
-    const queryChanged = nextProjectSearchQuery !== prevProjectSearchQuery;
-
     if (projectsUpdated) {
       this.fuse = new Fuse(nextState.projects, fuseOptions);
     }
 
-    if (queryChanged) {
-      this.setState({
-        filteredProjects: this.fuse.search(nextProjectSearchQuery),
-      });
+    const { pending: isPending } = nextState;
+    const { pending: wasPending } = this.state;
+    const pendingChanged = wasPending !== isPending;
+
+    const { error: currentError } = nextState;
+    const { error: prevError } = this.state;
+    const errorChanged = prevError !== currentError;
+
+    const { onStatusChanged } = nextProps;
+    if (pendingChanged || errorChanged) {
+      if (isPending) {
+        onStatusChanged('pending');
+      } else if (currentError) {
+        onStatusChanged('failed');
+      } else {
+        onStatusChanged('ready');
+      }
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { pending, error } = this.state;
-    const { onStatusChanged } = this.props;
-    const pendingChanged = pending !== prevState.pending;
-    const errorChanged = error !== prevState.error;
-    if (pendingChanged || errorChanged) {
-      if (pending) {
-        onStatusChanged('pending');
-      } else if (error) {
-        onStatusChanged('failed');
-      } else {
-        onStatusChanged('ready');
+    const { projectSearchQuery: nextProjectSearchQuery } = this.state;
+    const { projectSearchQuery: prevProjectSearchQuery } = prevState;
+    const queryChanged = nextProjectSearchQuery !== prevProjectSearchQuery;
+
+    if (queryChanged) {
+      const newFilteredProjects = this.fuse.search(nextProjectSearchQuery);
+      const { filteredProjects: currentFilteredProjects } = this.state;
+      if (currentFilteredProjects !== newFilteredProjects) {
+        // suppressing eslint warning, safe to update only done when query & result changes
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({ filteredProjects: newFilteredProjects });
       }
     }
   }
