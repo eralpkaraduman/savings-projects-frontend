@@ -49,7 +49,7 @@ class SearchField extends Component {
             disableUnderline
             disabled={disabled}
             value={inputValue}
-            placeholder="Search…"
+            placeholder="Search in descriptions…"
             onChange={e => this.handleOnInputChanged(e)}
             classes={{
               root: classes.searchInputRoot,
