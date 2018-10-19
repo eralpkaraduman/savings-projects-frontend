@@ -86,6 +86,13 @@ class ProjectsTable extends Component {
     });
   }
 
+  handleRowClick(rowIndex) {
+    const { sortedProjects } = this.state;
+    const { onRowClick } = this.props;
+    const projectData = sortedProjects[rowIndex];
+    onRowClick(projectData);
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -136,7 +143,7 @@ class ProjectsTable extends Component {
           {sortedProjects.map((project, index) => (
             // project items do not have any unique identifiers so we'll have to use map index
             // eslint-disable-next-line react/no-array-index-key
-            <TableRow className={classes.tableRow} key={index}>
+            <TableRow className={classes.tableRow} key={index} onClick={() => this.handleRowClick(index)}>
 
               <StyledTableCell numeric>
                 {renderNumber(project.project)}
@@ -180,6 +187,7 @@ class ProjectsTable extends Component {
 
 ProjectsTable.propTypes = {
   classes: PropTypes.object.isRequired,
+  onRowClick: PropTypes.func.isRequired,
   projects: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import styles from '../styles';
 import ProjectsTable from './ProjectsTable';
 import SearchField from './SearchField';
+import ProjectDataDialog from './ProjectDataDialog';
 
 const fuseOptions = {
   shouldSort: true,
@@ -29,6 +30,7 @@ class ProjectsPage extends Component {
       projectSearchQuery: '',
       projects: [],
       filteredProjects: [],
+      selectedProjectDataForDialogDisplay: null,
     };
     this.fuse = new Fuse([], fuseOptions);
   }
@@ -121,11 +123,16 @@ class ProjectsPage extends Component {
     });
   }
 
+  handleOnTableRowClick(rowData) {
+    this.setState(() => ({ selectedProjectDataForDialogDisplay: rowData }));
+  }
+
   render() {
     const { classes } = this.props;
     const {
       projects, projectSearchQuery,
       filteredProjects, pending,
+      selectedProjectDataForDialogDisplay,
     } = this.state;
     const shouldDisplayfilteredProjects = projectSearchQuery.length >= 2;
     return (
@@ -139,10 +146,14 @@ class ProjectsPage extends Component {
         <Grid item xs={12}>
           <Paper className={classes.tableRoot}>
             <ProjectsTable
+              onRowClick={rowData => this.handleOnTableRowClick(rowData)}
               projects={shouldDisplayfilteredProjects ? filteredProjects : projects}
             />
           </Paper>
         </Grid>
+        <ProjectDataDialog
+          data={selectedProjectDataForDialogDisplay}
+        />
       </Grid>
     );
   }
